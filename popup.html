@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeetCode Companion Pro</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --gradient: linear-gradient(135deg, #7c3aed 0%, #4f46e5 50%, #2563eb 100%);
+      --gradient-soft: linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(79,70,229,0.08) 100%);
+      --accent: #7c3aed;
+      --easy: #10b981;
+      --medium: #f59e0b;
+      --hard: #ef4444;
+      --bg: #0d0d12;
+      --bg-card: rgba(28,28,42,0.95);
+      --bg-card2: rgba(22,22,34,0.9);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.13);
+      --text: #f1f1f5;
+      --text-secondary: #a0a0b8;
+      --text-muted: #6b6b85;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --font: 'DM Sans', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --radius: 14px;
+      --scroll-thumb: #7c3aed;
+      --scroll-thumb-hover: #9d6eff;
+    }
+
+    * {
+  scrollbar-width: thin;
+  scrollbar-color: #7c3aed transparent;
+}
+*::-webkit-scrollbar { width: 4px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 4px; }
+*::-webkit-scrollbar-thumb:hover { background: #9d6eff; }
+html { overflow-y: scroll; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      width: 340px;
+      min-height: 480px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .header {
+      padding: 18px 18px 14px;
+      background: linear-gradient(180deg, rgba(124,58,237,0.12) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gradient);
+    }
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--gradient);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(124,58,237,0.4);
+    }
+    .logo-text { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
+    .logo-text span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .logo-sub { font-size: 10px; color: var(--text-muted); font-weight: 400; margin-top: 1px; letter-spacing: 0.04em; }
+
+    .streak-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #f59e0b;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 14px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 10px;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: default;
+    }
+    .stat-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+    .stat-card.total { border-color: rgba(124,58,237,0.25); background: linear-gradient(135deg, rgba(124,58,237,0.1), var(--bg-card)); }
+    .stat-card.easy { border-color: rgba(16,185,129,0.2); }
+    .stat-card.medium { border-color: rgba(245,158,11,0.2); }
+    .stat-card.hard { border-color: rgba(239,68,68,0.2); }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-card.total .stat-value { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-card.easy .stat-value { color: var(--easy); }
+    .stat-card.medium .stat-value { color: var(--medium); }
+    .stat-card.hard .stat-value { color: var(--hard); }
+
+    .stat-label { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    .section { padding: 0 14px 14px; }
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .chart-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .donut-wrap { flex-shrink: 0; position: relative; width: 100px; height: 100px; }
+    .donut-label {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .donut-label .num { font-size: 22px; font-weight: 700; color: var(--text); }
+    .donut-label .lbl { font-size: 9px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.04em; }
+
+    .legend { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .legend-row { display: flex; align-items: center; gap: 8px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .legend-name { font-size: 11px; color: var(--text-secondary); flex: 1; }
+    .legend-val { font-size: 11px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+
+    .progress-bars { display: flex; flex-direction: column; gap: 10px; }
+    .prog-row { display: flex; flex-direction: column; gap: 5px; }
+    .prog-meta { display: flex; justify-content: space-between; align-items: center; }
+    .prog-name { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+    .prog-count { font-size: 11px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+    .prog-track {
+      height: 5px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: bar-grow 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes bar-grow { from { width: 0 !important; } }
+    .prog-fill.easy { background: linear-gradient(90deg, #059669, #10b981); }
+    .prog-fill.medium { background: linear-gradient(90deg, #d97706, #f59e0b); }
+    .prog-fill.hard { background: linear-gradient(90deg, #dc2626, #ef4444); }
+
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 14px 14px; }
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.18s;
+      letter-spacing: 0.01em;
+    }
+    .action-btn.primary {
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(124,58,237,0.35);
+    }
+    .action-btn.primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .action-btn.secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+    }
+    .action-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    .popup-footer {
+      border-top: 1px solid var(--border);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-text { font-size: 10px; color: var(--text-muted); letter-spacing: 0.04em; }
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 6px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-muted);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    .empty-icon { font-size: 32px; margin-bottom: 8px; }
+    .empty-text { line-height: 1.5; }
+
+    @keyframes shimmer {
+      from { background-position: -200% 0; }
+      to { background-position: 200% 0; }
+    }
+    .shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.04) 80%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s infinite;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-row">
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <div class="logo-text">LC <span>Companion</span></div>
+          <div class="logo-sub">Pro Dashboard</div>
+        </div>
+      </div>
+      <div class="streak-badge" id="streak-badge">
+        🔥 <span id="streak-count">0</span> day streak
+      </div>
+    </div>
+  </div>
+
+  <div id="loading-state" style="padding:14px">
+    <div class="stats-grid" style="padding:0;margin-bottom:14px">
+      <div class="shimmer" style="height:72px;border-radius:12px"></div>
+      <div class="shimmer" style="height:72px;border-radius:12px"></div>
+      <div class="shimmer" style="height:72px;border-radius:12px"></div>
+    </div>
+    <div class="shimmer" style="height:120px;border-radius:14px;margin-bottom:14px"></div>
+    <div class="shimmer" style="height:80px;border-radius:14px"></div>
+  </div>
+
+  <div id="main-content" style="display:none">
+
+    <div class="stats-grid">
+      <div class="stat-card total">
+        <div class="stat-value" id="total-count">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card easy">
+        <div class="stat-value" id="easy-count">0</div>
+        <div class="stat-label">Easy</div>
+      </div>
+      <div class="stat-card medium">
+        <div class="stat-value" id="medium-count">0</div>
+        <div class="stat-label">Medium</div>
+      </div>
+    </div>
+    <div style="padding: 0 14px 14px; display:grid; grid-template-columns:1fr 1fr; gap:8px">
+      <div class="stat-card hard" style="grid-column:1">
+        <div class="stat-value" id="hard-count">0</div>
+        <div class="stat-label">Hard</div>
+      </div>
+      <div class="stat-card" style="background:var(--bg-card2)">
+        <div class="stat-value" id="streak-stat" style="color:#f59e0b;font-size:22px">0</div>
+        <div class="stat-label">Day Streak 🔥</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Distribution</div>
+      <div class="chart-wrap">
+        <div class="donut-wrap">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>
+            <circle id="arc-easy" cx="50" cy="50" r="38" fill="none" stroke="#10b981" stroke-width="12"
+              stroke-dasharray="0 239" stroke-dashoffset="60" stroke-linecap="round"
+              style="transition: stroke-dasharray 1s cubic-bezier(0.34,1.56,0.64,1); transform-origin:50px 50px; transform:rotate(-90deg)"/>
+            <circle id="arc-medium" cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="12"
+              stroke-dasharray="0 239" stroke-dashoffset="60" stroke-linecap="round"
+              style="transition: stroke-dasharray 1s cubic-bezier(0.34,1.56,0.64,1); transform-origin:50px 50px; transform:rotate(-90deg)"/>
+            <circle id="arc-hard" cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="12"
+              stroke-dasharray="0 239" stroke-dashoffset="60" stroke-linecap="round"
+              style="transition: stroke-dasharray 1s cubic-bezier(0.34,1.56,0.64,1); transform-origin:50px 50px; transform:rotate(-90deg)"/>
+          </svg>
+          <div class="donut-label">
+            <div class="num" id="donut-total">0</div>
+            <div class="lbl">SOLVED</div>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="legend-row">
+            <div class="legend-dot" style="background:#10b981"></div>
+            <span class="legend-name">Easy</span>
+            <span class="legend-val" id="legend-easy">0</span>
+          </div>
+          <div class="legend-row">
+            <div class="legend-dot" style="background:#f59e0b"></div>
+            <span class="legend-name">Medium</span>
+            <span class="legend-val" id="legend-medium">0</span>
+          </div>
+          <div class="legend-row">
+            <div class="legend-dot" style="background:#ef4444"></div>
+            <span class="legend-name">Hard</span>
+            <span class="legend-val" id="legend-hard">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Progress</div>
+      <div class="progress-bars">
+        <div class="prog-row">
+          <div class="prog-meta">
+            <span class="prog-name">Easy</span>
+            <span class="prog-count"><span id="prog-easy-n">0</span> / 800</span>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill easy" id="prog-easy-bar" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-meta">
+            <span class="prog-name">Medium</span>
+            <span class="prog-count"><span id="prog-med-n">0</span> / 1600</span>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill medium" id="prog-med-bar" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-meta">
+            <span class="prog-name">Hard</span>
+            <span class="prog-count"><span id="prog-hard-n">0</span> / 700</span>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill hard" id="prog-hard-bar" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="action-btn primary" id="open-lc-btn">🚀 Open LeetCode</button>
+      <button class="action-btn secondary" id="toggle-sidebar-btn">⚡ Toggle Sidebar</button>
+    </div>
+
+  </div>
+
+  <div class="popup-footer">
+    <span class="footer-text">LeetCode Companion Pro v1.0</span>
+    <span class="kbd">Alt+S</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
