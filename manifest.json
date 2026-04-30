@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "LeetCode Companion Pro",
+  "version": "1.2.0",
+  "description": "A premium LeetCode enhancement with AI hints, notes, company tags, and progress tracking.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["https://leetcode.com/*"],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*", "https://leetcode.com/problemset/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["data/company_tags.json", "data/company_problems.json"],
+      "matches": ["https://leetcode.com/*"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "LeetCode Companion Pro",
+    "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "commands": {
+    "toggle-sidebar": {
+      "suggested_key": { "default": "Alt+S", "mac": "Alt+S" },
+      "description": "Toggle the LeetCode Companion sidebar"
+    }
+  },
+  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'self'" }
+}

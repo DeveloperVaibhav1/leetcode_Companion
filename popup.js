@@ -1,4 +1,5 @@
 
+
 document.addEventListener("DOMContentLoaded", () => {
   loadProgress();
   setupActions();
@@ -10,7 +11,6 @@ function loadProgress() {
     const mainEl = document.getElementById("main-content");
 
     if (!res || !res.success) {
-  
       if (loadingEl) loadingEl.innerHTML = `
         <div class="empty-state">
           <div class="empty-icon">📭</div>
@@ -31,7 +31,6 @@ function loadProgress() {
         mainEl.style.animation = "";
       }
 
-      
       animateCount("total-count", counts.total);
       animateCount("easy-count", counts.easy);
       animateCount("medium-count", counts.medium);
@@ -39,11 +38,11 @@ function loadProgress() {
       animateCount("streak-stat", streak || 0);
       animateCount("streak-count", streak || 0);
 
-      
+
       setDonutChart(counts.easy, counts.medium, counts.hard);
       document.getElementById("donut-total").textContent = counts.total;
 
-
+      
       document.getElementById("legend-easy").textContent = counts.easy;
       document.getElementById("legend-medium").textContent = counts.medium;
       document.getElementById("legend-hard").textContent = counts.hard;
@@ -56,6 +55,7 @@ function loadProgress() {
     }, 300);
   });
 }
+
 
 function animateCount(id, target) {
   const el = document.getElementById(id);
@@ -72,6 +72,7 @@ function animateCount(id, target) {
   });
 }
 
+
 function setDonutChart(easy, medium, hard) {
   const total = easy + medium + hard;
   const circumference = 2 * Math.PI * 38; 
@@ -83,7 +84,7 @@ function setDonutChart(easy, medium, hard) {
   const medFrac = medium / total;
   const hardFrac = hard / total;
 
-  
+
 
   const easyLen = easyFrac * C;
   const medLen = medFrac * C;
@@ -104,6 +105,7 @@ function setArc(el, fillLen, C, offsetAngle) {
   if (!el) return;
   const gap = C - fillLen;
   el.setAttribute("stroke-dasharray", `${fillLen} ${gap}`);
+  
   const deg = (offsetAngle / C) * 360;
   el.style.transform = `rotate(${-90 + deg}deg)`;
 }
