@@ -198,9 +198,7 @@
     });
   }
 
-  // NOTE: companyTags is intentionally excluded — it requires LeetCode Premium
-  // and will always throw a GraphQL error for free users. Company data is loaded
-  // from the local company_tags.json fallback instead.
+
   const PROBLEM_QUERY = `
     query lcpProblemData($titleSlug: String!) {
       question(titleSlug: $titleSlug) {
@@ -271,8 +269,7 @@
   }
 
   
-  // Slug overrides for companies whose display name doesn't cleanly map
-  // to their slug in company_problems.json via the companyKey() function.
+
   const SLUG_OVERRIDES = {
     "walmart":   "walmart-labs",
     "twitterx":  "twitter",
