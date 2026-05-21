@@ -1,4 +1,3 @@
-
 (function () {
   "use strict";
   if (document.getElementById("lcp-root")) return;
@@ -199,13 +198,15 @@
     });
   }
 
+  // NOTE: companyTags is intentionally excluded — it requires LeetCode Premium
+  // and will always throw a GraphQL error for free users. Company data is loaded
+  // from the local company_tags.json fallback instead.
   const PROBLEM_QUERY = `
     query lcpProblemData($titleSlug: String!) {
       question(titleSlug: $titleSlug) {
         questionId
         difficulty
         topicTags { name slug }
-        companyTags { name slug }
       }
     }
   `;
@@ -225,16 +226,6 @@
 
     if(q.difficulty) S.difficulty = q.difficulty;
 
-  
-    if(q.companyTags?.length){
-      S.companies = q.companyTags.map(c => ({
-        name:  c.name,
-        slug:  c.slug,
-        color: getCompanyColor(c.slug, c.name),
-        frequency: null,
-      }));
-      S.frequency = Math.min(9.5, 4 + q.companyTags.length * 0.5);
-    }
     return true;
   }
 
@@ -280,6 +271,19 @@
   }
 
   
+  // Slug overrides for companies whose display name doesn't cleanly map
+  // to their slug in company_problems.json via the companyKey() function.
+  const SLUG_OVERRIDES = {
+    "walmart":   "walmart-labs",
+    "twitterx":  "twitter",
+    "twitter/x": "twitter",
+  };
+
+  function resolveCompanySlug(name) {
+    const raw = companyKey(name);
+    return SLUG_OVERRIDES[raw] || raw;
+  }
+
   async function loadCompanyTags(){
     try {
       await loadCompanyTagsFromGraphQL();
@@ -297,7 +301,8 @@
         if(e?.companies){
           S.companies=e.companies.map(c=>({
             ...c,
-            slug: c.slug || companyKey(c.name),
+            slug: c.slug || resolveCompanySlug(c.name),
+            color: c.color || getCompanyColor(resolveCompanySlug(c.name), c.name),
           }));
         }
         if(e?.frequency) S.frequency=e.frequency;
@@ -554,7 +559,7 @@
 
   async function renderCompanyDetail(root, companyName, companySlug){
     S.companyView = companyName;
-    const slug = companySlug || companyKey(companyName);
+    const slug = companySlug || resolveCompanySlug(companyName);
 
     const listEl   = $("#lcp-co-list", root);
     const detailEl = $("#lcp-co-detail", root);
